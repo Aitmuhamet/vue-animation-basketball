@@ -22,7 +22,7 @@
                 <div class="scoreboard__logo-wrapper logo-wrapper logo-wrapper--left">
                     <div
                         class="scoreboard__logo-container"
-                        :class="{ 'logo1--hidden': teams.team1.showText }"
+                        :class="{ 'logo1--hidden': teams.team1.showScore }"
                     >
                         <img
                             src="./../assets/team1-logo.png"
@@ -32,7 +32,7 @@
                     </div>
                     <div
                         class="scoreboard__score-text scoreboard__score-text--left"
-                        :class="{ 'score-text--shown': teams.team1.showText }"
+                        :class="{ 'score-text--shown': teams.team1.showScore }"
                     >
                         +{{ teams.team1.score }}
                     </div>
@@ -99,7 +99,7 @@
                 <div class="scoreboard__logo-wrapper logo-wrapper logo-wrapper--right">
                     <div
                         class="scoreboard__logo-container"
-                        :class="{ 'logo2--hidden': teams.team2.showText }"
+                        :class="{ 'logo2--hidden': teams.team2.showScore }"
                     >
                         <img
                             src="./../assets/team2-logo.png"
@@ -109,7 +109,7 @@
                     </div>
                     <div
                         class="scoreboard__score-text scoreboard__score-text--right"
-                        :class="{ 'score-text--shown': teams.team2.showText }"
+                        :class="{ 'score-text--shown': teams.team2.showScore }"
                     >
                         +{{ teams.team2.score }}
                     </div>
@@ -264,20 +264,23 @@
 import { ref, reactive } from 'vue'
 
 const teams = reactive({
-    team1: { showText: false, score: 0, showPhoto: false, showStats: false },
-    team2: { showText: false, score: 0, showPhoto: false, showStats: false },
+    team1: { score: 0, showScore: false, showPhoto: false, showStats: false, isClicked: false },
+    team2: { score: 0, showScore: false, showPhoto: false, showStats: false, isClicked: false },
 })
 
 const showMatchStatistics = ref(true);
 
 const changeScore = (team, points) => {
-    console.log('changeScore', team);
+    
+    if (teams[team].isClicked) return
 
+    teams[team].isClicked = true
+    
     teams[team].score = points;
-    teams[team].showText = true;
+    teams[team].showScore = true;
 
     setTimeout(() => {
-        teams[team].showText = false
+        teams[team].showScore = false
         teams[team].showStats = true
         setTimeout(() => {
             setTimeout(() => {
@@ -285,6 +288,7 @@ const changeScore = (team, points) => {
                 setTimeout(() => {
                     teams[team].showPhoto = false
                     teams[team].showStats = false
+                    teams[team].isClicked = false
                 }, 7000);
             }, 100);
         }, 100);
