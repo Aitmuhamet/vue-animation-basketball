@@ -65,7 +65,7 @@
             </div>
             <div class="scoreboard-score score">
                 <div class="score-inner scoreboard-score-inner">
-                    <div class="scoreboard-score__left-number">186</div>
+                    <div class="scoreboard-score__left-number">86</div>
                     <div class="scoreboard-score__divider">:</div>
                     <div class="scoreboard-score__right-number">184</div>
                 </div>
@@ -214,9 +214,9 @@
                         <th class="table__cell table__cell--head">
                             <div class="score table-score">
                                 <div class="score-inner table-score-inner">
-                                    <div class="scoreboard-score__left-number">186</div>
+                                    <div class="scoreboard-score__left-number">86</div>
                                     <div class="scoreboard-score__divider">:</div>
-                                    <div class="scoreboard-score__right-number">184</div>
+                                    <div class="scoreboard-score__right-number">84</div>
                                 </div>
                             </div>
                         </th>
@@ -1006,7 +1006,7 @@ button {
 }
 
 .table-score-inner {
-    font-size: 28px;
+    font-size: 33px;
     width: 180px;
     height: 50px;
 }
