@@ -12,7 +12,7 @@
 
 1.  Клонируйте репозиторий:
     ```bash
-    git clone [https://github.com/Aitmuhamet/vue-animation-basketball.git](https://github.com/Aitmuhamet/vue-animation-basketball.git)
+    git clone https://github.com/Aitmuhamet/vue-animation-basketball.git
     ```
 2.  Перейдите в папку проекта:
     ```bash
