@@ -390,6 +390,7 @@ button {
     transform: translateX(-50%);
     background-color: var(--background-color);
     font-size: 2rem;
+    font-weight: 600;
     width: 100%;
     height: 100%;
     display: flex;
