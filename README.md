@@ -1,5 +1,40 @@
-# Vue 3 + Vite
+# Vue 3 Плашка для трансляций со статистикой
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Вёрстка и анимации в одном файле (./components/BasketballScoreboard.vue)
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## Технологии
+
+*   Vite
+*   Vue 3
+*   npm
+
+## Установка
+
+1.  Клонируйте репозиторий:
+    ```bash
+    git clone [https://github.com/Aitmuhamet/vue-animation-basketball.git](https://github.com/Aitmuhamet/vue-animation-basketball.git)
+    ```
+2.  Перейдите в папку проекта:
+    ```bash
+    cd [название папки проекта]
+    ```
+3.  Установите зависимости:
+    ```bash
+    npm install
+    ```
+
+## Запуск
+
+1.  Запустите сервер разработки:
+    ```bash
+    npm run dev
+    ```
+2.  Откройте проект в браузере по адресу, который будет указан в консоли (обычно это `http://localhost:5173`).
+
+## Сборка для production
+
+1.  Соберите проект для production:
+    ```bash
+    npm run build
+    ```
+2.  Файлы готового проекта будут находиться в папке `dist`.
