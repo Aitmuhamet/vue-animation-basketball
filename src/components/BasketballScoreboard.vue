@@ -288,7 +288,9 @@ const changeScore = (team, points) => {
                 setTimeout(() => {
                     teams[team].showPhoto = false
                     teams[team].showStats = false
-                    teams[team].isClicked = false
+                    setTimeout(() => {
+                        teams[team].isClicked = false
+                    }, 500);
                 }, 7000);
             }, 100);
         }, 100);
@@ -452,9 +454,6 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    perspective: 10000px;
-    /* Добавляет глубину 3D */
 
     font-family: Helvetica;
     color: var(--text-color);
@@ -853,7 +852,6 @@ button {
 .scoreboard__content {
     position: absolute;
     top: calc(50% - (40px + 45px + 33px) / 2);
-    /* top: 50%; */
     left: 50%;
     width: 800px;
     height: 600px;
@@ -872,12 +870,11 @@ button {
     transition: transform 1.2s ease-in-out, opacity 0.8s ease-out;
     /* transform:  */
 
-    transform-style: preserve-3d;
-    transform: translate(-50%, -50%) perspective(900px);
+    transform: translate(-50%, -50%);
 }
 
 .scoreboard__content--hidden {
-    transform: rotate3d(1, 0, 0, 90deg) translate3D(-50%, 0px, -110px);
+    transform: translate(-50%, 100%);
     opacity: 0;
 }
 
@@ -901,7 +898,7 @@ button {
     line-height: normal;
 
     border-radius: 105.799px;
-    background: #FFF;
+    background: var(--background-color);
     box-shadow: 0px 7.053px 17.633px 0px rgba(0, 0, 0, 0.10);
 }
 
