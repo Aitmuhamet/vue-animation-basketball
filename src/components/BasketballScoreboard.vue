@@ -96,7 +96,7 @@
                 <div class="scoreboard__team-name-wrapper">
                     <div class="scoreboard__team-name">Банк Уралсиб</div>
                 </div>
-                <div class="scoreboard__logo-wrapper logo-wrapper logo-wrapper--left">
+                <div class="scoreboard__logo-wrapper logo-wrapper logo-wrapper--right">
                     <div
                         class="scoreboard__logo-container"
                         :class="{ 'logo2--hidden': teams.team2.showText }"
@@ -108,7 +108,7 @@
                         />
                     </div>
                     <div
-                        class="scoreboard__score-text"
+                        class="scoreboard__score-text scoreboard__score-text--right"
                         :class="{ 'score-text--shown': teams.team2.showText }"
                     >
                         +{{ teams.team2.score }}
@@ -378,7 +378,6 @@ button {
     left: 50%;
     transform: translateX(-50%);
     background-color: var(--background-color);
-    color: var(--team-one-color);
     font-size: 2rem;
     width: 100%;
     height: 100%;
@@ -387,6 +386,13 @@ button {
     align-items: center;
     transition: opacity 1s ease-in-out;
     opacity: 0;
+}
+
+.scoreboard__score-text--left {
+    color: var(--team-one-color);
+}
+.scoreboard__score-text--right {
+    color: var(--team-two-color);
 }
 
 .score-text--shown {
