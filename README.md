@@ -1,6 +1,6 @@
 # Vue 3 Плашка для трансляций со статистикой
 
-Вёрстка и анимации в одном файле (./components/BasketballScoreboard.vue)
+Вёрстка и анимации в одном компоненте: './components/BasketballScoreboard.vue'
 
 ## Технологии
 
