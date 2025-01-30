@@ -264,22 +264,30 @@
 import { ref, reactive } from 'vue'
 
 const teams = reactive({
-    team1: { score: 0, showScore: false, showPhoto: false, showStats: false, isClicked: false },
-    team2: { score: 0, showScore: false, showPhoto: false, showStats: false, isClicked: false },
+    team1: { score: 0, showScore: false, showPhoto: false, showStats: false },
+    team2: { score: 0, showScore: false, showPhoto: false, showStats: false },
 })
+
+const timeouts = {
+    team1: null,
+    team2: null,
+};
 
 const showMatchStatistics = ref(true);
 
 const changeScore = (team, points) => {
-    
-    if (teams[team].isClicked) return
 
-    teams[team].isClicked = true
-    
+    if (timeouts[team]) {
+        clearTimeout(timeouts[team]);
+        teams[team].showScore = false
+        teams[team].showPhoto = false
+        teams[team].showStats = false
+    }
+
     teams[team].score = points;
     teams[team].showScore = true;
 
-    setTimeout(() => {
+    timeouts[team] = setTimeout(() => {
         teams[team].showScore = false
         teams[team].showStats = true
         setTimeout(() => {
@@ -288,9 +296,6 @@ const changeScore = (team, points) => {
                 setTimeout(() => {
                     teams[team].showPhoto = false
                     teams[team].showStats = false
-                    setTimeout(() => {
-                        teams[team].isClicked = false
-                    }, 500);
                 }, 7000);
             }, 100);
         }, 100);
@@ -397,6 +402,7 @@ button {
 .scoreboard__score-text--left {
     color: var(--team-one-color);
 }
+
 .scoreboard__score-text--right {
     color: var(--team-two-color);
 }
@@ -868,8 +874,6 @@ button {
     background-repeat: no-repeat;
 
     transition: transform 1.2s ease-in-out, opacity 0.8s ease-out;
-    /* transform:  */
-
     transform: translate(-50%, -50%);
 }
 
