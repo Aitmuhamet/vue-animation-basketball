@@ -269,16 +269,18 @@ const teams = reactive({
 })
 
 const timeouts = {
-    team1: null,
-    team2: null,
+    team1: {showScore: false, showPhoto: false, showStats: false},
+    team2: {showScore: false, showPhoto: false, showStats: false},
 };
 
 const showMatchStatistics = ref(true);
 
 const changeScore = (team, points) => {
 
-    if (timeouts[team]) {
-        clearTimeout(timeouts[team]);
+    if (timeouts[team].showScore || timeouts[team].showPhoto || timeouts[team].showStats) {
+        clearTimeout(timeouts[team].showScore);
+        clearTimeout(timeouts[team].showPhoto);
+        clearTimeout(timeouts[team].showStats);
         teams[team].showScore = false
         teams[team].showPhoto = false
         teams[team].showStats = false
@@ -287,17 +289,15 @@ const changeScore = (team, points) => {
     teams[team].score = points;
     teams[team].showScore = true;
 
-    timeouts[team] = setTimeout(() => {
+    timeouts[team].showScore = setTimeout(() => {
         teams[team].showScore = false
         teams[team].showStats = true
-        setTimeout(() => {
-            setTimeout(() => {
-                teams[team].showPhoto = true
-                setTimeout(() => {
-                    teams[team].showPhoto = false
-                    teams[team].showStats = false
-                }, 7000);
-            }, 100);
+        timeouts[team].showPhoto = setTimeout(() => {
+            teams[team].showPhoto = true
+            timeouts[team].showStats = setTimeout(() => {
+                teams[team].showPhoto = false
+                teams[team].showStats = false
+            }, 7000);
         }, 100);
     }, points * 1000);
 }
