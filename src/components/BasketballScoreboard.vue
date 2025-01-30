@@ -31,7 +31,7 @@
                         />
                     </div>
                     <div
-                        class="scoreboard__score-text"
+                        class="scoreboard__score-text scoreboard__score-text--left"
                         :class="{ 'score-text--shown': teams.team1.showText }"
                     >
                         +{{ teams.team1.score }}
