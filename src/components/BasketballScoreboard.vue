@@ -729,6 +729,7 @@ button {
 
 .scoreboard__overlay {
     position: absolute;
+    z-index: 20;
     bottom: 73px;
 
     display: flex;
