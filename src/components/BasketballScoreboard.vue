@@ -1,20 +1,20 @@
 <template>
 
-    <div class="left-team-buttons">
-        <button @click="changeScore('team1', 3)">+3</button>
-        <button @click="changeScore('team1', 2)">+2</button>
-        <button @click="changeScore('team1', 1)">+1</button>
-    </div>
-    <div class="right-team-buttons">
-        <button @click="changeScore('team2', 3)">+3</button>
-        <button @click="changeScore('team2', 2)">+2</button>
-        <button @click="changeScore('team2', 1)">+1</button>
-    </div>
-    <div class="match-statistics-buttons">
-        <button @click="showMatchStatistics = !showMatchStatistics">Match Statistics</button>
-    </div>
-
     <div class="scoreboard">
+
+        <div class="left-team-buttons">
+            <button @click="changeScore('team1', 3)">+3</button>
+            <button @click="changeScore('team1', 2)">+2</button>
+            <button @click="changeScore('team1', 1)">+1</button>
+        </div>
+        <div class="right-team-buttons">
+            <button @click="changeScore('team2', 3)">+3</button>
+            <button @click="changeScore('team2', 2)">+2</button>
+            <button @click="changeScore('team2', 1)">+1</button>
+        </div>
+        <div class="match-statistics-buttons">
+            <button @click="showMatchStatistics = !showMatchStatistics">Match Statistics</button>
+        </div>
 
         <!-- Основная табличка со счетом -->
         <div class="scoreboard__main">
@@ -41,7 +41,7 @@
                     <div class="scoreboard__team-name">BIP Lions</div>
                 </div>
             </div>
-            <div class="scoreboard__indicators scoreboard__indicators--left">
+            <div class="scoreboard__indicators scoreboard__indicators-left">
                 <div class="scoreboard__line">
                     <span class="scoreboard__dash scoreboard__dash--active"></span>
                     <span class="scoreboard__dash scoreboard__dash--active"></span>
@@ -65,12 +65,12 @@
             </div>
             <div class="scoreboard-score score">
                 <div class="score-inner scoreboard-score-inner">
-                    <div class="scoreboard-score__left-number">86</div>
+                    <div class="score__number-left">86</div>
                     <div class="scoreboard-score__divider">:</div>
-                    <div class="scoreboard-score__right-number">184</div>
+                    <div class="score__number-right">184</div>
                 </div>
             </div>
-            <div class="scoreboard__indicators scoreboard__indicators--right">
+            <div class="scoreboard__indicators scoreboard__indicators-right">
                 <div class="scoreboard__line">
                     <span class="scoreboard__dash scoreboard__dash--active"></span>
                     <span class="scoreboard__dash scoreboard__dash--active"></span>
@@ -142,7 +142,7 @@
             <Transition name="slide-fade">
                 <div
                     v-if="teams.team1.showStats"
-                    class="scoreboard__player-info-inner"
+                    class="scoreboard__player-info-inner scoreboard__player-info-inner-left"
                 >
                     <div class="scoreboard__player-name">Андреев Сергей</div>
                     <div class="scoreboard__player-stats">
@@ -194,12 +194,10 @@
                     <h3 class="table__caption">Статистика матча</h3>
                 </caption>
                 <thead class="table__head">
-                    <tr class="table__row table__row--head">
-
-                        <th class="table__cell table__cell--head">
-
-                            <div class="scoreboard__team--left">
-                                <div class="table__logo-wrapper logo-wrapper logo-wrapper--left">
+                    <tr class="table__row table__row-head">
+                        <th class="table__cell table__cell-head">
+                            <div class="team">
+                                <div class="team__logo-wrapper logo-wrapper logo-wrapper--left">
                                     <img
                                         src="./../assets/team1-logo.png"
                                         alt="BIP Lions"
@@ -211,19 +209,19 @@
 
                         </th>
 
-                        <th class="table__cell table__cell--head">
+                        <th class="table__cell table__cell-head">
                             <div class="score table-score">
                                 <div class="score-inner table-score-inner">
-                                    <div class="scoreboard-score__left-number">86</div>
+                                    <div class="score__number-left">86</div>
                                     <div class="scoreboard-score__divider">:</div>
-                                    <div class="scoreboard-score__right-number">84</div>
+                                    <div class="score__number-right">84</div>
                                 </div>
                             </div>
                         </th>
 
-                        <th class="table__cell table__cell--head">
-                            <div class="scoreboard__team--right">
-                                <div class="table__logo-wrapper logo-wrapper logo-wrapper--right">
+                        <th class="table__cell table__cell-head">
+                            <div class="team">
+                                <div class="team__logo-wrapper logo-wrapper logo-wrapper--right">
                                     <img
                                         src="./../assets/team2-logo.png"
                                         alt="Банк Уралсиб"
@@ -245,13 +243,19 @@
                         :key="index"
                         class="table__row"
                     >
-                        <td class="table__cell">{{ item.col1 }}</td>
                         <td class="table__cell">
-                            <div class="table__cell-categories">
+                            <div class="table__cell-content">
+                                {{ item.col1 }}
+                            </div>
+                        </td>
+                        <td class="table__cell">
+                            <div class="table__cell-content table__cell-content-categories">
                                 {{ item.col2 }}
                             </div>
                         </td>
-                        <td class="table__cell">{{ item.col3 }}</td>
+                        <td class="table__cell">
+                            <div class="table__cell-content">{{ item.col3 }}</div>
+                        </td>
                     </tr>
                 </TransitionGroup>
             </table>
@@ -261,7 +265,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 
 const teams = reactive({
     team1: { score: 0, showScore: false, showPhoto: false, showStats: false },
@@ -269,11 +273,22 @@ const teams = reactive({
 })
 
 const timeouts = {
-    team1: {showScore: false, showPhoto: false, showStats: false},
-    team2: {showScore: false, showPhoto: false, showStats: false},
+    team1: { showScore: false, showPhoto: false, showStats: false },
+    team2: { showScore: false, showPhoto: false, showStats: false },
 };
 
 const showMatchStatistics = ref(true);
+
+const items = ref([
+    { col1: "17/28 (61%)", col2: "2-х очковые", col3: "15/37 (41%)" },
+    { col1: "11/39 (28%)", col2: "3-х очковые", col3: "15/35 (43%)" },
+    { col1: "15/21 (71%)", col2: "Штрафные", col3: "10/14 (71%)" },
+    { col1: "48", col2: "Подборы", col3: "36" },
+    { col1: "13", col2: "Передачи", col3: "21" },
+    { col1: "8", col2: "Перехваты", col3: "11" },
+    { col1: "17", col2: "Потери", col3: "11" },
+    { col1: "1", col2: "Блокшоты", col3: "1" }
+])
 
 const changeScore = (team, points) => {
 
@@ -302,19 +317,9 @@ const changeScore = (team, points) => {
     }, points * 1000);
 }
 
-const items = ref([
-    { col1: "17/28 (61%)", col2: "2-х очковые", col3: "15/37 (41%)" },
-    { col1: "11/39 (28%)", col2: "3-х очковые", col3: "15/35 (43%)" },
-    { col1: "15/21 (71%)", col2: "Штрафные", col3: "10/14 (71%)" },
-    { col1: "48", col2: "Подборы", col3: "36" },
-    { col1: "13", col2: "Передачи", col3: "21" },
-    { col1: "8", col2: "Перехваты", col3: "11" },
-    { col1: "17", col2: "Потери", col3: "11" },
-    { col1: "1", col2: "Блокшоты", col3: "1" }
-])
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 /* Обнуление */
 *,
 ::before,
@@ -343,26 +348,32 @@ button {
 .right-team-buttons,
 .left-team-buttons {
     position: absolute;
-    top: 20px;
+    top: 1vw;
     z-index: 200;
 
     display: flex;
-    gap: 5px;
+    gap: .5vw;
+
+    button {
+        padding: 1vw 1.5vw;
+        font-size: 1.3vw;
+    }
 }
 
 .left-team-buttons {
-    left: 20px;
+    left: 1vw;
 }
 
 .right-team-buttons {
-    right: 20px;
+    right: 1vw;
 }
 
 .match-statistics-buttons {
     position: absolute;
-    top: 100px;
+    top: 6vw;
     z-index: 200;
-    left: 20px;
+    left: 1vw;
+    font-size: 1.3vw;
 }
 
 /* Для анимации */
@@ -389,7 +400,7 @@ button {
     left: 50%;
     transform: translateX(-50%);
     background-color: var(--background-color);
-    font-size: 2rem;
+    font-size: 3vw;
     font-weight: 600;
     width: 100%;
     height: 100%;
@@ -423,7 +434,7 @@ button {
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-    transform: translateY(20px);
+    transform: translateY(1vw);
     opacity: 0;
 }
 
@@ -453,11 +464,9 @@ button {
     --background-color: #fff;
     --text-color: #393939;
 
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    top: 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -466,16 +475,19 @@ button {
     color: var(--text-color);
 
     /* временные свойства */
-    background: rgb(0, 120, 0);
+    background: transparent;
+
+    font-size: 16px;
 }
+
 
 .scoreboard__main {
     position: absolute;
     z-index: 100;
-    bottom: 33px;
-    width: calc(900px - 2 * 25px);
+    bottom: 2vw;
+    width: calc(60vw);
     /* 65.7%; */
-    height: 45px;
+    height: 6%;
     /* 6%; */
     background: var(--background-color);
     color: var(--text-color);
@@ -495,6 +507,9 @@ button {
     flex: 1;
     display: flex;
     align-items: center;
+    overflow: hidden;
+    height: 100%;
+    width: 30%;
 }
 
 .scoreboard__team--right {
@@ -502,21 +517,21 @@ button {
 }
 
 .scoreboard__team-name-wrapper {
+    width: 90%;
     overflow: hidden;
-    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .scoreboard__team-name {
-    width: 215px;
-    padding: 8px 20px;
+    width: 100%;
+    padding: .6vw .1vw;
     border-radius: 45px;
 
     text-align: center;
     font-family: Helvetica;
-    font-size: 18.06px;
+    font-size: calc(1.8vw / (16 / 9));
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -527,19 +542,15 @@ button {
 }
 
 .scoreboard__team--right .scoreboard__team-name {
-    border: 20px solid var(--team-two-color);
-    margin-right: 25px;
+    border: 1.2vw solid var(--team-two-color);
 }
 
 .scoreboard__team--left .scoreboard__team-name {
-    border: 20px solid var(--team-one-color);
-    margin-left: 25px;
+    border: 1.2vw solid var(--team-one-color);
 }
 
 .logo-wrapper {
-    width: 70px;
-    height: 70px;
-    padding: 10px;
+    padding: 6%;
     background-color: var(--background-color);
     border-radius: 50%;
     overflow: hidden;
@@ -549,30 +560,35 @@ button {
     justify-content: center;
 }
 
+.scoreboard__logo-wrapper {
+    width: 9%;
+    aspect-ratio: 1 / 1;
+    padding: 1%;
+}
+
 .scoreboard__logo-wrapper,
-.table__logo-wrapper {
+.team__logo-wrapper {
     position: absolute;
 }
 
 .scoreboard__team--left .scoreboard__logo-wrapper {
-    left: -12px;
+    right: 95%;
 }
 
 .scoreboard__team--right .scoreboard__logo-wrapper {
-    right: -12px;
+    left: 95%;
 }
 
 .logo-wrapper--left {
-    border: 6px solid var(--team-one-color);
+    border: .4vw solid var(--team-one-color);
 }
 
 .logo-wrapper--right {
-    border: 6px solid var(--team-two-color);
+    border: .4vw solid var(--team-two-color);
 }
 
 .scoreboard__logo {
-    width: 40px;
-    height: 40px;
+    width: 100%;
 }
 
 .score {
@@ -583,18 +599,18 @@ button {
     content: '';
     position: absolute;
     z-index: 5;
-    bottom: 16px;
+    bottom: 50%;
     left: 50%;
     transform: translateX(-50%);
     background: var(--team-two-color);
-    height: 1px;
-    width: 351px;
+    height: .1vw;
+    width: 24.5vw;
 }
 
 .score-inner {
     text-align: center;
     font-family: Helvetica;
-    font-size: 18.06px;
+    font-size: 1.3vw;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -611,9 +627,10 @@ button {
 }
 
 .scoreboard-score-inner {
-    margin: 0 7px;
-    height: 33px;
-    width: 120px;
+    margin: 0 .4vw;
+    padding: .3vw .1vw;
+    width: 8vw;
+
 }
 
 .scoreboard-score__divider {
@@ -621,26 +638,35 @@ button {
     flex: 0
 }
 
-.scoreboard-score__left-number,
-.scoreboard-score__right-number {
+.score__number-left,
+.score__number-right {
     flex: 1;
 }
 
-.scoreboard-score__right-number {
+.score__number-right {
     text-align-last: left;
 }
 
-.scoreboard-score__left-number {
+.score__number-left {
     text-align-last: right;
 }
 
 .scoreboard__indicators {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 25px;
+    justify-content: center;
+    gap: 14%;
+    height: 100%;
 
-    transform: translateY(3px);
+    align-items: flex-end;
+}
+
+.scoreboard__indicators-right {
+    margin-left: 1vw;
+}
+
+.scoreboard__indicators-left {
+    margin-right: 1vw;
 }
 
 .scoreboard__line {
@@ -650,18 +676,18 @@ button {
 
 .scoreboard__dash {
     display: inline-block;
-    width: 20px;
-    height: 4px;
+    width: calc(2.25vw / (16 / 9));
+    height: .2vw;
     flex-shrink: 0;
     border-radius: 88.567px;
     background: var(--inactive-color);
 }
 
-.scoreboard__indicators--left .scoreboard__dash--active {
+.scoreboard__indicators-left .scoreboard__dash--active {
     background: var(--team-one-color);
 }
 
-.scoreboard__indicators--right .scoreboard__dash--active {
+.scoreboard__indicators-right .scoreboard__dash--active {
     background: var(--team-two-color);
 }
 
@@ -669,17 +695,18 @@ button {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .scoreboard-scores {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: .2vw;
 }
 
 .scoreboard__number {
     text-align: center;
-    font-size: 12px;
+    font-size: .6vw;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -689,11 +716,11 @@ button {
     color: var(--inactive-color);
 }
 
-.scoreboard__indicators--left .scoreboard__number--active {
+.scoreboard__indicators-left .scoreboard__number--active {
     color: var(--team-one-color);
 }
 
-.scoreboard__indicators--right .scoreboard__number--active {
+.scoreboard__indicators-right .scoreboard__number--active {
     color: var(--team-two-color);
 }
 
@@ -713,16 +740,16 @@ button {
 .scoreboard__circle {
     display: inline-block;
     border-radius: 50%;
-    width: 6px;
-    height: 6px;
+    width: .4vw;
+    aspect-ratio: 1;
     background: var(--inactive-color);
 }
 
-.scoreboard__indicators--left .scoreboard__circle--active {
+.scoreboard__indicators-left .scoreboard__circle--active {
     background: var(--team-one-color);
 }
 
-.scoreboard__indicators--right .scoreboard__circle--active {
+.scoreboard__indicators-right .scoreboard__circle--active {
     background: var(--team-two-color);
 }
 
@@ -730,20 +757,20 @@ button {
 .scoreboard__overlay {
     position: absolute;
     z-index: 20;
-    bottom: 73px;
+    bottom: 5vw;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    width: 120px;
+    width: 8vw;
     background: var(--background-color);
-    padding-top: 6px;
-    padding-bottom: 5px;
-    border-radius: 25px 25px 0px 0px;
+    padding-top: calc(.9vw / (16 / 9));
+    padding-bottom: calc(.9vw / (16 / 9));
+    border-radius: 1.5vw 1.5vw 0 0;
 
     color: var(--team-two-color);
-    font-size: 18px;
+    font-size: 1.2vw;
 
     /* transform: rotateX(90deg); */
     transform-origin: bottom;
@@ -753,50 +780,51 @@ button {
 .scoreboard__quarter {
     background-color: var(--team-two-color);
     color: var(--background-color);
-    width: 24px;
-    height: 24px;
-    padding: 5px;
-    border-radius: 50px;
+    width: 1.7vw;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 20px;
+    font-size: 1vw;
     font-weight: 600;
 }
 
 .scoreboard__divider {
-    height: 24px;
-    width: 1px;
+    height: 1.3vw;
+    width: .05vw;
     background-color: var(--team-two-color);
-    margin: 0 5px;
+    margin: 0 .5vw;
 }
 
 .scoreboard__player-info {
     position: absolute;
-    bottom: 73px;
-    width: 310px;
-    height: 40px;
-
-    font-size: 10px;
+    bottom: 5vw;
+    width: 20.5vw;
+    aspect-ratio: 22/1;
+    font-size: .7vw;
     font-weight: 600;
 
 }
 
 .scoreboard__player-info-inner {
     background-color: var(--background-color);
-    padding: 5px 25px;
-    border-radius: 25px 25px 0 0;
+    padding: calc(0.6vw / (16 / 9)) calc(2vw / (16 / 9));
+    border-radius: 1.5vw 1.5vw 0 0;
 
     display: flex;
     align-items: start;
-    gap: 8px;
+    gap: .2vw;
+}
+
+.scoreboard__player-info-inner-left {
+    justify-content: end;
 }
 
 .scoreboard__player-info--right {
     transform: translateX(78%);
-    padding-right: 30px;
 }
 
 .scoreboard__player-info--right .scoreboard__player-name {
@@ -804,14 +832,14 @@ button {
 }
 
 .scoreboard__player-name {
-    width: 82px;
-    height: 30px;
+    width: 7vw;
+    aspect-ratio: 4 / 1;
     text-align: left;
 }
 
 .scoreboard__player-photo-wrapper {
-    width: 51px;
-    height: 51px;
+    width: 4vw;
+    aspect-ratio: 1 / 1;
     border-radius: 50px;
 
     display: flex;
@@ -822,28 +850,27 @@ button {
 }
 
 .scoreboard__player-photo {
-    height: 51px;
+    height: 100%;
 }
 
 .scoreboard__player-info--right .scoreboard__player-photo-wrapper {
-    left: 83%;
+    left: 90%;
     bottom: 20%;
 }
 
 .scoreboard__player-info--left {
     transform: translateX(-78%);
-    padding-left: 30px;
 }
 
 .scoreboard__player-info--left .scoreboard__player-photo-wrapper {
-    right: 83%;
+    right: 90%;
     bottom: 20%;
 }
 
 
 .scoreboard__player-stats {
     display: flex;
-    gap: 8px;
+    gap: calc(.7vw /(16 / 9));
 }
 
 .scoreboard__stat {
@@ -859,19 +886,22 @@ button {
 /* Общая статистика */
 .scoreboard__content {
     position: absolute;
-    top: calc(50% - (40px + 45px + 33px) / 2);
+    top: calc(50% - 4vw);
     left: 50%;
-    width: 800px;
-    height: 600px;
+    width: 58%;
+    height: 70%;
+
+    display: flex;
+    justify-content: center;
 
     background-color: var(--background-color);
-    padding: 35px 30px 10px;
+    padding: 1.5%;
     border-radius: 12px;
 
     font-weight: 600;
 
     background-image: url('./../assets/table-image.png');
-    background-size: 620px;
+    background-size: 75%;
     background-position: 125% 70%;
     background-repeat: no-repeat;
 
@@ -885,135 +915,179 @@ button {
 }
 
 .table {
-    border-spacing: 15px;
+    border-spacing: calc(1vw / (16 / 9));
+    width: 98%;
 }
 
 .table__caption {
-    height: 70px;
-    width: 500px;
-    margin-bottom: 20px;
+    width: 46%;
+    aspect-ratio: 6 / 1;
+    padding: .1em;
+    margin-bottom: 2%;
     display: flex;
     align-items: center;
     justify-content: center;
 
     text-align: center;
     color: var(--text-color);
-    font-size: 40px;
     font-style: normal;
+    font-size: 2.3vw;
     font-weight: 600;
     line-height: normal;
 
     border-radius: 105.799px;
     background: var(--background-color);
     box-shadow: 0px 7.053px 17.633px 0px rgba(0, 0, 0, 0.10);
+
+}
+
+.table__row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: calc(.9vw / (16 / 9));
+}
+
+.table__row-head {
+    margin-bottom: calc(1.8vw / (16 / 9));
+}
+
+.table__cell-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .table__row td:nth-child(2),
-.table__row--head th:nth-child(2) {
+.table__row-head th:nth-child(2) {
     font-weight: bold;
-    width: 360px;
+    width: 50%;
 
     display: flex;
     justify-content: center;
 }
 
-.table__cell:nth-child(1),
-.table__cell:nth-child(3) {
-    color: var(--background-color);
-    border-radius: 20px;
-    width: 250px;
+.team {
+    position: relative;
+    width: 12vw;
+    aspect-ratio: 6 / 1;
 }
 
-.table__cell:nth-child(1) {
+.table__cell-content:nth-child(1),
+.table__cell-content:nth-child(3) {
+    color: var(--background-color);
+    border-radius: 1vw;
+    width: 11vw;
+    aspect-ratio: 5 / 1;
+}
+
+.table__cell:nth-child(1) .table__cell-content {
     background: var(--team-one-color);
 }
 
-.table__cell:nth-child(3) {
+.table__cell:nth-child(3) .table__cell-content {
     background: var(--team-two-color);
 }
 
-.table__cell-categories {
-    border: 1px solid var(--text-color);
+.table__cell-content.table__cell-content-categories {
+    border: .05vw solid var(--text-color);
     border-radius: 30px;
     background-color: var(--background-color);
-    padding: 1px 0;
-    width: 180px;
+    color: var(--text-color);
+    padding: calc(0.01vw / (16 / 9)) 0;
+    width: 50%;
 
-    font-size: 19px;
+    font-size: calc(2.4vw / (16 / 9));
+    aspect-ratio: 7 / 1;
     position: relative;
 }
 
-.table__cell-categories::before,
-.table__cell-categories::after {
+.table__cell-content-categories::before,
+.table__cell-content-categories::after {
     content: '';
     position: absolute;
     top: 50%;
-    height: 1px;
-    width: 85px;
+    height: .1vw;
+    width: 50%;
 }
 
-.table__cell-categories::before {
+.table__cell-content-categories::before {
     background-color: var(--team-one-color);
     right: 100%;
 }
 
-.table__cell-categories::after {
+.table__cell-content-categories::after {
     background-color: var(--team-two-color);
     left: 100%;
 }
 
-.table__cell.table__cell--head {
+.table__cell-head {
+    width: 11vw;
     background-color: transparent;
+    display: flex;
+    align-items: center;
 }
 
 .table__team-name {
     position: absolute;
-    top: 12px;
     z-index: 10;
-    width: 160px;
-    height: 30px;
+    width: 100%;
+    aspect-ratio: 12 / 2;
     background: var(--background-color);
-    border-radius: 20px;
+    border-radius: 1vw;
     box-shadow: 0px 7.053px 17.633px 0px rgba(0, 0, 0, 0.10);
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 13px;
+    font-size: 1vw;
     font-weight: 600;
     color: var(--text-color);
 }
 
-.table__cell.table__cell--head:nth-child(1) {
-    transform: translateX(17px);
+.table__cell-content {
+    font-size: 1.1vw;
 }
 
-.table__cell.table__cell--head:nth-child(3) {
-    transform: translateX(-17px);
+.table__cell-head:nth-child(1) .table__team-name {
+    transform: translateX(15%);
 }
 
-.table__logo-wrapper {
+.table__cell-head:nth-child(3) .table__team-name {
+    transform: translateX(-15%);
+}
+
+.table__cell-content:nth-child(2) {
+    margin: 0 auto;
+}
+
+.team__logo-wrapper {
     z-index: 15;
+    width: 45%;
+    height: unset;
+    aspect-ratio: 1 / 1;
 }
 
-.table__logo-wrapper.logo-wrapper--left {
-    top: -20%;
-    left: -32%;
+.team__logo-wrapper.logo-wrapper--left {
+    bottom: -50%;
+    left: -17%;
 }
 
-.table__logo-wrapper.logo-wrapper--right {
-    top: -20%;
-    right: -32%;
+.team__logo-wrapper.logo-wrapper--right {
+    bottom: -50%;
+    right: -17%;
 }
 
-.table-score-inner {
-    font-size: 33px;
-    width: 180px;
-    height: 50px;
+.table-score {
+    width: 50%;
 }
 
 .table-score::after {
-    bottom: 22px;
+    width: 200%;
+}
+
+.table-score-inner {
+    padding: 3%;
+    font-size: calc(3.5vw / (16 / 9));
 }
 </style>
