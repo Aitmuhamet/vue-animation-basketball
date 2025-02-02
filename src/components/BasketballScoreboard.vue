@@ -264,90 +264,88 @@
     </div>
 </template>
 
-<script setup>
-import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
+<script>
+export default {
+  props: {
+    content: String, // Текст внутри блока .scoreboard
+  },
+  data() {
+    return {
+      windowWidth: window.innerWidth,
+      scoreboardWidth: 0,
+      teams: {
+        team1: { score: 0, showScore: false, showPhoto: false, showStats: false },
+        team2: { score: 0, showScore: false, showPhoto: false, showStats: false },
+      },
+      timeouts: {
+        team1: { showScore: null, showPhoto: null, showStats: null }, // Use null for timeouts
+        team2: { showScore: null, showPhoto: null, showStats: null },
+      },
+      showMatchStatistics: false,
+      items: [
+        { col1: "17/28 (61%)", col2: "2-х очковые", col3: "15/37 (41%)" },
+        { col1: "11/39 (28%)", col2: "3-х очковые", col3: "15/35 (43%)" },
+        { col1: "15/21 (71%)", col2: "Штрафные", col3: "10/14 (71%)" },
+        { col1: "48", col2: "Подборы", col3: "36" },
+        { col1: "13", col2: "Передачи", col3: "21" },
+        { col1: "8", col2: "Перехваты", col3: "11" },
+        { col1: "17", col2: "Потери", col3: "11" },
+        { col1: "1", col2: "Блокшоты", col3: "1" }
+      ],
+    };
+  },
+  computed: {
+    widthRatio() {
+      return this.scoreboardWidth / this.windowWidth;
+    },
+    scoreboardStyle() {
+      return {
+        '--scoreboard-width-ratio': this.widthRatio,
+      };
+    },
+  },
+  mounted() {
+    window.addEventListener('resize', this.updateWidths);
+    this.updateWidths(); // Устанавливаем начальные значения
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.updateWidths);
+  },
+  methods: {
+    updateWidths() {
+      this.windowWidth = window.innerWidth;
+      const scoreboardElement = document.querySelector('.scoreboard');
+      this.scoreboardWidth = scoreboardElement ? scoreboardElement.offsetWidth : 0; // Handle potential null
+    },
+    changeScore(team, points) {
+      const timeouts = this.timeouts[team]; // Shortcut
 
-const props = defineProps({
-  content: String, // Текст внутри блока .scoreboard
-});
+      if (timeouts.showScore || timeouts.showPhoto || timeouts.showStats) {
+        clearTimeout(timeouts.showScore);
+        clearTimeout(timeouts.showPhoto);
+        clearTimeout(timeouts.showStats);
+        this.teams[team].showScore = false;
+        this.teams[team].showPhoto = false;
+        this.teams[team].showStats = false;
+      }
 
-const windowWidth = ref(window.innerWidth);
-const scoreboardWidth = ref(0);
+      this.teams[team].score = points;
+      this.teams[team].showScore = true;
 
-const updateWidths = () => {
-  windowWidth.value = window.innerWidth;
-  scoreboardWidth.value = document.querySelector('.scoreboard').offsetWidth;
-};
-
-onMounted(() => {
-  window.addEventListener('resize', updateWidths);
-  updateWidths(); // Устанавливаем начальные значения
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', updateWidths);
-});
-
-const widthRatio = computed(() => {
-  return scoreboardWidth.value / windowWidth.value;
-});
-
-const scoreboardStyle = computed(() => {
-  return {
-    '--scoreboard-width-ratio': widthRatio.value,
-  };
-});
-
-const teams = reactive({
-    team1: { score: 0, showScore: true, showPhoto: true, showStats: true },
-    team2: { score: 0, showScore: true, showPhoto: true, showStats: true },
-})
-
-const timeouts = {
-    team1: { showScore: false, showPhoto: false, showStats: false },
-    team2: { showScore: false, showPhoto: false, showStats: false },
-};
-
-const showMatchStatistics = ref(true);
-
-const items = ref([
-    { col1: "17/28 (61%)", col2: "2-х очковые", col3: "15/37 (41%)" },
-    { col1: "11/39 (28%)", col2: "3-х очковые", col3: "15/35 (43%)" },
-    { col1: "15/21 (71%)", col2: "Штрафные", col3: "10/14 (71%)" },
-    { col1: "48", col2: "Подборы", col3: "36" },
-    { col1: "13", col2: "Передачи", col3: "21" },
-    { col1: "8", col2: "Перехваты", col3: "11" },
-    { col1: "17", col2: "Потери", col3: "11" },
-    { col1: "1", col2: "Блокшоты", col3: "1" }
-])
-
-const changeScore = (team, points) => {
-
-    if (timeouts[team].showScore || timeouts[team].showPhoto || timeouts[team].showStats) {
-        clearTimeout(timeouts[team].showScore);
-        clearTimeout(timeouts[team].showPhoto);
-        clearTimeout(timeouts[team].showStats);
-        teams[team].showScore = false
-        teams[team].showPhoto = false
-        teams[team].showStats = false
-    }
-
-    teams[team].score = points;
-    teams[team].showScore = true;
-
-    timeouts[team].showScore = setTimeout(() => {
-        teams[team].showScore = false
-        teams[team].showStats = true
-        timeouts[team].showPhoto = setTimeout(() => {
-            teams[team].showPhoto = true
-            timeouts[team].showStats = setTimeout(() => {
-                teams[team].showPhoto = false
-                teams[team].showStats = false
-            }, 7000);
+      timeouts.showScore = setTimeout(() => {
+        this.teams[team].showScore = false;
+        this.teams[team].showStats = true;
+        timeouts.showPhoto = setTimeout(() => {
+          this.teams[team].showPhoto = true;
+          timeouts.showStats = setTimeout(() => {
+            this.teams[team].showPhoto = false;
+            this.teams[team].showStats = false;
+          }, 7000);
         }, 100);
-    }, points * 1000);
-}
-
+      }, points * 1000);
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -501,6 +499,7 @@ button {
     height: 100%;
     max-height: 100vh;
     aspect-ratio: 16 / 9;
+    overflow: hidden;
     border: 1px solid black;
 
     display: flex;
