@@ -1,6 +1,6 @@
 <template>
 
-    <div class="scoreboard">
+    <div class="scoreboard" :style="scoreboardStyle">
 
         <div class="left-team-buttons">
             <button @click="changeScore('team1', 3)">+3</button>
@@ -65,7 +65,7 @@
             </div>
             <div class="scoreboard-score score">
                 <div class="score-inner scoreboard-score-inner">
-                    <div class="score__number-left">86</div>
+                    <div class="score__number-left">186</div>
                     <div class="scoreboard-score__divider">:</div>
                     <div class="score__number-right">184</div>
                 </div>
@@ -212,9 +212,9 @@
                         <th class="table__cell table__cell-head">
                             <div class="score table-score">
                                 <div class="score-inner table-score-inner">
-                                    <div class="score__number-left">86</div>
+                                    <div class="score__number-left">186</div>
                                     <div class="scoreboard-score__divider">:</div>
-                                    <div class="score__number-right">84</div>
+                                    <div class="score__number-right">184</div>
                                 </div>
                             </div>
                         </th>
@@ -266,6 +266,37 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
+
+const props = defineProps({
+  content: String, // Текст внутри блока .scoreboard
+});
+
+const windowWidth = ref(window.innerWidth);
+const scoreboardWidth = ref(0);
+
+const updateWidths = () => {
+  windowWidth.value = window.innerWidth;
+  scoreboardWidth.value = document.querySelector('.scoreboard').offsetWidth;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', updateWidths);
+  updateWidths(); // Устанавливаем начальные значения
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateWidths);
+});
+
+const widthRatio = computed(() => {
+  return scoreboardWidth.value / windowWidth.value;
+});
+
+const scoreboardStyle = computed(() => {
+  return {
+    '--scoreboard-width-ratio': widthRatio.value,
+  };
+});
 
 const teams = reactive({
     team1: { score: 0, showScore: false, showPhoto: false, showStats: false },
@@ -348,32 +379,32 @@ button {
 .right-team-buttons,
 .left-team-buttons {
     position: absolute;
-    top: 1vw;
+    top: calc(1vw * var(--scoreboard-width-ratio));
     z-index: 200;
 
     display: flex;
-    gap: .5vw;
+    gap: calc(.5vw * var(--scoreboard-width-ratio));
 
     button {
-        padding: 1vw 1.5vw;
-        font-size: 1.3vw;
+        padding: calc(1vw * var(--scoreboard-width-ratio)) calc(1.5vw * var(--scoreboard-width-ratio));
+        font-size: calc(1.3vw * var(--scoreboard-width-ratio));
     }
 }
 
 .left-team-buttons {
-    left: 1vw;
+    left: calc(1vw * var(--scoreboard-width-ratio));
 }
 
 .right-team-buttons {
-    right: 1vw;
+    right: calc(1vw * var(--scoreboard-width-ratio));
 }
 
 .match-statistics-buttons {
     position: absolute;
-    top: 6vw;
+    top: calc(6vw * var(--scoreboard-width-ratio));
     z-index: 200;
-    left: 1vw;
-    font-size: 1.3vw;
+    left: calc(1vw * var(--scoreboard-width-ratio));
+    font-size: calc(1.3vw * var(--scoreboard-width-ratio));
 }
 
 /* Для анимации */
@@ -465,8 +496,11 @@ button {
     --text-color: #393939;
 
     position: relative;
-    width: 100%;
     height: 100%;
+    max-height: 100vh;
+    aspect-ratio: 16 / 9;
+    border: 1px solid black;
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -484,10 +518,10 @@ button {
 .scoreboard__main {
     position: absolute;
     z-index: 100;
-    bottom: 2vw;
-    width: calc(60vw);
+    bottom: calc(2vw * var(--scoreboard-width-ratio));
+    width: calc(60vw * var(--scoreboard-width-ratio));
     /* 65.7%; */
-    height: 6%;
+    height: calc(3.5vw * var(--scoreboard-width-ratio));
     /* 6%; */
     background: var(--background-color);
     color: var(--text-color);
@@ -526,12 +560,12 @@ button {
 
 .scoreboard__team-name {
     width: 100%;
-    padding: .6vw .1vw;
+    padding: calc(.6vw * var(--scoreboard-width-ratio)) calc(.1vw * var(--scoreboard-width-ratio));
     border-radius: 45px;
 
     text-align: center;
     font-family: Helvetica;
-    font-size: calc(1.8vw / (16 / 9));
+    font-size: calc(1.8vw / (16 / 9) * var(--scoreboard-width-ratio));
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -542,11 +576,11 @@ button {
 }
 
 .scoreboard__team--right .scoreboard__team-name {
-    border: 1.2vw solid var(--team-two-color);
+    border: calc(1.2vw * var(--scoreboard-width-ratio)) solid var(--team-two-color);
 }
 
 .scoreboard__team--left .scoreboard__team-name {
-    border: 1.2vw solid var(--team-one-color);
+    border: calc(1.2vw * var(--scoreboard-width-ratio)) solid var(--team-one-color);
 }
 
 .logo-wrapper {
@@ -580,11 +614,11 @@ button {
 }
 
 .logo-wrapper--left {
-    border: .4vw solid var(--team-one-color);
+    border: calc(.4vw * var(--scoreboard-width-ratio)) solid var(--team-one-color);
 }
 
 .logo-wrapper--right {
-    border: .4vw solid var(--team-two-color);
+    border: calc(.4vw * var(--scoreboard-width-ratio)) solid var(--team-two-color);
 }
 
 .scoreboard__logo {
@@ -603,20 +637,20 @@ button {
     left: 50%;
     transform: translateX(-50%);
     background: var(--team-two-color);
-    height: .1vw;
-    width: 24.5vw;
+    height: calc(.1vw * var(--scoreboard-width-ratio));
+    width: calc(24.5vw * var(--scoreboard-width-ratio));
 }
 
 .score-inner {
     text-align: center;
     font-family: Helvetica;
-    font-size: 1.3vw;
+    font-size: calc(1.3vw * var(--scoreboard-width-ratio));
     font-style: normal;
     font-weight: 600;
     line-height: normal;
 
     background: var(--background-color);
-    border: 1px solid var(--team-two-color);
+    border: calc(.1vw * var(--scoreboard-width-ratio)) solid var(--team-two-color);
     border-radius: 135.242px;
 
     display: flex;
@@ -627,14 +661,14 @@ button {
 }
 
 .scoreboard-score-inner {
-    margin: 0 .4vw;
-    padding: .3vw .1vw;
-    width: 8vw;
+    margin: 0 calc(.4vw * var(--scoreboard-width-ratio));
+    padding: calc(.3vw * var(--scoreboard-width-ratio)) calc(.1vw * var(--scoreboard-width-ratio));
+    width: calc(8vw * var(--scoreboard-width-ratio));
 
 }
 
 .scoreboard-score__divider {
-    margin: 0 5px;
+    margin: 0 calc(.2vw * var(--scoreboard-width-ratio));
     flex: 0
 }
 
@@ -662,22 +696,22 @@ button {
 }
 
 .scoreboard__indicators-right {
-    margin-left: 1vw;
+    margin-left: calc(1vw * var(--scoreboard-width-ratio));
 }
 
 .scoreboard__indicators-left {
-    margin-right: 1vw;
+    margin-right: calc(1vw * var(--scoreboard-width-ratio));
 }
 
 .scoreboard__line {
     display: flex;
-    gap: 2px;
+    gap: calc(.2vw * var(--scoreboard-width-ratio));
 }
 
 .scoreboard__dash {
     display: inline-block;
-    width: calc(2.25vw / (16 / 9));
-    height: .2vw;
+    width: calc(2.2vw / (16 / 9) * var(--scoreboard-width-ratio));
+    height: calc(.2vw * var(--scoreboard-width-ratio));
     flex-shrink: 0;
     border-radius: 88.567px;
     background: var(--inactive-color);
@@ -694,19 +728,20 @@ button {
 .scoreboard__bottom-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
     width: 100%;
+    height: calc(.5vw * var(--scoreboard-width-ratio));
 }
 
 .scoreboard-scores {
     display: flex;
     align-items: center;
-    gap: .2vw;
+    gap: calc(.2vw * var(--scoreboard-width-ratio));
 }
 
 .scoreboard__number {
     text-align: center;
-    font-size: .6vw;
+    font-size: calc(.6vw * var(--scoreboard-width-ratio));
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -734,13 +769,13 @@ button {
 .scoreboard__circles {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: calc(.1vw * var(--scoreboard-width-ratio));
 }
 
 .scoreboard__circle {
     display: inline-block;
     border-radius: 50%;
-    width: .4vw;
+    width: calc(.4vw * var(--scoreboard-width-ratio));
     aspect-ratio: 1;
     background: var(--inactive-color);
 }
@@ -757,20 +792,20 @@ button {
 .scoreboard__overlay {
     position: absolute;
     z-index: 20;
-    bottom: 5vw;
+    bottom: calc(5vw * var(--scoreboard-width-ratio));
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    width: 8vw;
+    width: calc(8vw * var(--scoreboard-width-ratio));
     background: var(--background-color);
-    padding-top: calc(.9vw / (16 / 9));
-    padding-bottom: calc(.9vw / (16 / 9));
-    border-radius: 1.5vw 1.5vw 0 0;
+    padding-top: calc(.9vw / (16 / 9) * var(--scoreboard-width-ratio));
+    padding-bottom: calc(.9vw / (16 / 9) * var(--scoreboard-width-ratio));
+    border-radius: calc(1.5vw * var(--scoreboard-width-ratio)) calc(1.5vw * var(--scoreboard-width-ratio)) 0 0;
 
     color: var(--team-two-color);
-    font-size: 1.2vw;
+    font-size: calc(1.2vw * var(--scoreboard-width-ratio));
 
     /* transform: rotateX(90deg); */
     transform-origin: bottom;
@@ -780,7 +815,7 @@ button {
 .scoreboard__quarter {
     background-color: var(--team-two-color);
     color: var(--background-color);
-    width: 1.7vw;
+    width: calc(1.7vw * var(--scoreboard-width-ratio));
     aspect-ratio: 1 / 1;
     border-radius: 50%;
 
@@ -788,13 +823,13 @@ button {
     align-items: center;
     justify-content: center;
 
-    font-size: 1vw;
+    font-size: calc(1vw * var(--scoreboard-width-ratio));
     font-weight: 600;
 }
 
 .scoreboard__divider {
-    height: 1.3vw;
-    width: .05vw;
+    height: calc(1.3vw * var(--scoreboard-width-ratio));
+    width: calc(.05vw * var(--scoreboard-width-ratio));
     background-color: var(--team-two-color);
     margin: 0 .5vw;
 }
@@ -886,7 +921,7 @@ button {
 /* Общая статистика */
 .scoreboard__content {
     position: absolute;
-    top: calc(50% - 4vw);
+    top: calc(50% - 4vw * var(--scoreboard-width-ratio));
     left: 50%;
     width: 58%;
     height: 70%;
@@ -915,7 +950,7 @@ button {
 }
 
 .table {
-    border-spacing: calc(1vw / (16 / 9));
+    border-spacing: calc(1vw / (16 / 9) * var(--scoreboard-width-ratio));
     width: 98%;
 }
 
@@ -923,7 +958,7 @@ button {
     width: 46%;
     aspect-ratio: 6 / 1;
     padding: .1em;
-    margin-bottom: 2%;
+    margin-bottom: calc(1vw * var(--scoreboard-width-ratio));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -931,7 +966,7 @@ button {
     text-align: center;
     color: var(--text-color);
     font-style: normal;
-    font-size: 2.3vw;
+    font-size: calc(2.3vw * var(--scoreboard-width-ratio));
     font-weight: 600;
     line-height: normal;
 
@@ -944,11 +979,11 @@ button {
 .table__row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: calc(.9vw / (16 / 9));
+    margin-bottom: calc(.9vw / (16 / 9) * var(--scoreboard-width-ratio));
 }
 
 .table__row-head {
-    margin-bottom: calc(1.8vw / (16 / 9));
+    margin-bottom: calc(1.8vw / (16 / 9) * var(--scoreboard-width-ratio));
 }
 
 .table__cell-content {
@@ -968,7 +1003,7 @@ button {
 
 .team {
     position: relative;
-    width: 12vw;
+    width: calc(12vw * var(--scoreboard-width-ratio));
     aspect-ratio: 6 / 1;
 }
 
@@ -976,7 +1011,7 @@ button {
 .table__cell-content:nth-child(3) {
     color: var(--background-color);
     border-radius: 1vw;
-    width: 11vw;
+    width: calc(11vw * var(--scoreboard-width-ratio));
     aspect-ratio: 5 / 1;
 }
 
@@ -993,10 +1028,10 @@ button {
     border-radius: 30px;
     background-color: var(--background-color);
     color: var(--text-color);
-    padding: calc(0.01vw / (16 / 9)) 0;
+    padding: calc(0.1vw / (16 / 9) * var(--scoreboard-width-ratio)) 0;
     width: 50%;
 
-    font-size: calc(2.4vw / (16 / 9));
+    font-size: calc(2.4vw / (16 / 9) * var(--scoreboard-width-ratio));
     aspect-ratio: 7 / 1;
     position: relative;
 }
@@ -1006,7 +1041,7 @@ button {
     content: '';
     position: absolute;
     top: 50%;
-    height: .1vw;
+    height: calc(.1vw * var(--scoreboard-width-ratio));
     width: 50%;
 }
 
@@ -1021,7 +1056,7 @@ button {
 }
 
 .table__cell-head {
-    width: 11vw;
+    width: calc(11vw * var(--scoreboard-width-ratio));
     background-color: transparent;
     display: flex;
     align-items: center;
@@ -1033,20 +1068,20 @@ button {
     width: 100%;
     aspect-ratio: 12 / 2;
     background: var(--background-color);
-    border-radius: 1vw;
+    border-radius: calc(1vw * var(--scoreboard-width-ratio));
     box-shadow: 0px 7.053px 17.633px 0px rgba(0, 0, 0, 0.10);
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 1vw;
+    font-size: calc(1vw * var(--scoreboard-width-ratio));
     font-weight: 600;
     color: var(--text-color);
 }
 
 .table__cell-content {
-    font-size: 1.1vw;
+    font-size: calc(1.1vw * var(--scoreboard-width-ratio));
 }
 
 .table__cell-head:nth-child(1) .table__team-name {
@@ -1088,6 +1123,6 @@ button {
 
 .table-score-inner {
     padding: 3%;
-    font-size: calc(3.5vw / (16 / 9));
+    font-size: calc(3.5vw / (16 / 9) * var(--scoreboard-width-ratio));
 }
 </style>

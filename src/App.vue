@@ -12,10 +12,14 @@ import BasketballScoreboard from './components/BasketballScoreboard.vue'
 #app {
   max-width: unset;
   padding: 0;
+  width: 100vw;
 }
 
 .app-inner {
-  width: 100vw;
+  display: flex;
+  justify-content: center;
+
+  height: 100%;
   aspect-ratio: 16 / 9;
   background: rgb(0, 120, 0);
 }
