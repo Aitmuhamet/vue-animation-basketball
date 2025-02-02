@@ -26,7 +26,7 @@
                     >
                         <img
                             src="./../assets/team1-logo.png"
-                            alt="BIP Lions"
+                            alt="Логотип первой команды"
                             class="scoreboard__logo"
                         />
                     </div>
@@ -103,7 +103,7 @@
                     >
                         <img
                             src="./../assets/team2-logo.png"
-                            alt="BIP Lions"
+                            alt="Логотип второй команды"
                             class="scoreboard__logo"
                         />
                     </div>
@@ -200,7 +200,7 @@
                                 <div class="team__logo-wrapper logo-wrapper logo-wrapper--left">
                                     <img
                                         src="./../assets/team1-logo.png"
-                                        alt="BIP Lions"
+                                        alt=" Логотип первой команды"
                                         class="scoreboard__logo"
                                     >
                                 </div>
@@ -224,7 +224,7 @@
                                 <div class="team__logo-wrapper logo-wrapper logo-wrapper--right">
                                     <img
                                         src="./../assets/team2-logo.png"
-                                        alt="Банк Уралсиб"
+                                        alt="Логотип второй команды"
                                         class="scoreboard__logo"
                                     >
                                 </div>
