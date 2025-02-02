@@ -497,7 +497,7 @@ button {
 
     position: relative;
     height: 100%;
-    max-height: 100vh;
+    max-height: 100svh;
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border: 1px solid black;
