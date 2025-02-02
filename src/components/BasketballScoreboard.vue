@@ -299,8 +299,8 @@ const scoreboardStyle = computed(() => {
 });
 
 const teams = reactive({
-    team1: { score: 0, showScore: false, showPhoto: false, showStats: false },
-    team2: { score: 0, showScore: false, showPhoto: false, showStats: false },
+    team1: { score: 0, showScore: true, showPhoto: true, showStats: true },
+    team2: { score: 0, showScore: true, showPhoto: true, showStats: true },
 })
 
 const timeouts = {
@@ -388,6 +388,7 @@ button {
     button {
         padding: calc(1vw * var(--scoreboard-width-ratio)) calc(1.5vw * var(--scoreboard-width-ratio));
         font-size: calc(1.3vw * var(--scoreboard-width-ratio));
+        border-radius: calc(1vw * var(--scoreboard-width-ratio));
     }
 }
 
@@ -412,8 +413,9 @@ button {
 .scoreboard__logo-container {
     position: relative;
     width: 100%;
-    height: 100%;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
+    display: flex;
     transition: transform 1s ease-in-out;
 }
 
@@ -431,7 +433,7 @@ button {
     left: 50%;
     transform: translateX(-50%);
     background-color: var(--background-color);
-    font-size: 3vw;
+    font-size: calc(3vw * var(--scoreboard-width-ratio));
     font-weight: 600;
     width: 100%;
     height: 100%;
@@ -792,7 +794,7 @@ button {
 .scoreboard__overlay {
     position: absolute;
     z-index: 20;
-    bottom: calc(5vw * var(--scoreboard-width-ratio));
+    bottom: calc(5.2vw * var(--scoreboard-width-ratio));
 
     display: flex;
     align-items: center;
@@ -831,27 +833,27 @@ button {
     height: calc(1.3vw * var(--scoreboard-width-ratio));
     width: calc(.05vw * var(--scoreboard-width-ratio));
     background-color: var(--team-two-color);
-    margin: 0 .5vw;
+    margin: 0 calc(.5vw * var(--scoreboard-width-ratio));
 }
 
 .scoreboard__player-info {
     position: absolute;
-    bottom: 5vw;
-    width: 20.5vw;
+    bottom: calc(5.5vw * var(--scoreboard-width-ratio));
+    width: calc(20.5vw * var(--scoreboard-width-ratio));
     aspect-ratio: 22/1;
-    font-size: .7vw;
+    font-size: calc(.7vw * var(--scoreboard-width-ratio));
     font-weight: 600;
 
 }
 
 .scoreboard__player-info-inner {
     background-color: var(--background-color);
-    padding: calc(0.6vw / (16 / 9)) calc(2vw / (16 / 9));
+    padding: calc(0.5vw / (16 / 9) * var(--scoreboard-width-ratio)) calc(2vw / (16 / 9) * var(--scoreboard-width-ratio));
     border-radius: 1.5vw 1.5vw 0 0;
 
     display: flex;
     align-items: start;
-    gap: .2vw;
+    gap: calc(.2vw * var(--scoreboard-width-ratio));
 }
 
 .scoreboard__player-info-inner-left {
@@ -867,13 +869,13 @@ button {
 }
 
 .scoreboard__player-name {
-    width: 7vw;
+    width: calc(7vw * var(--scoreboard-width-ratio));
     aspect-ratio: 4 / 1;
     text-align: left;
 }
 
 .scoreboard__player-photo-wrapper {
-    width: 4vw;
+    width: calc(4vw * var(--scoreboard-width-ratio));
     aspect-ratio: 1 / 1;
     border-radius: 50px;
 
@@ -928,9 +930,10 @@ button {
 
     display: flex;
     justify-content: center;
+    align-items: center;
 
     background-color: var(--background-color);
-    padding: 1.5%;
+    padding: calc(1vw * var(--scoreboard-width-ratio));
     border-radius: 12px;
 
     font-weight: 600;
@@ -957,7 +960,7 @@ button {
 .table__caption {
     width: 46%;
     aspect-ratio: 6 / 1;
-    padding: .1em;
+    padding: calc(.5vw * var(--scoreboard-width-ratio));
     margin-bottom: calc(1vw * var(--scoreboard-width-ratio));
     display: flex;
     align-items: center;
@@ -979,11 +982,11 @@ button {
 .table__row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: calc(.9vw / (16 / 9) * var(--scoreboard-width-ratio));
+    margin-bottom: calc(.8vw / (16 / 9) * var(--scoreboard-width-ratio));
 }
 
 .table__row-head {
-    margin-bottom: calc(1.8vw / (16 / 9) * var(--scoreboard-width-ratio));
+    margin-bottom: calc(1vw / (16 / 9) * var(--scoreboard-width-ratio));
 }
 
 .table__cell-content {
@@ -1006,7 +1009,6 @@ button {
     width: calc(12vw * var(--scoreboard-width-ratio));
     aspect-ratio: 6 / 1;
 }
-
 .table__cell-content:nth-child(1),
 .table__cell-content:nth-child(3) {
     color: var(--background-color);
@@ -1024,7 +1026,7 @@ button {
 }
 
 .table__cell-content.table__cell-content-categories {
-    border: .05vw solid var(--text-color);
+    border: calc(.05vw * var(--scoreboard-width-ratio)) solid var(--text-color);
     border-radius: 30px;
     background-color: var(--background-color);
     color: var(--text-color);
